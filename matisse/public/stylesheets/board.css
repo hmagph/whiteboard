@@ -1,0 +1,14 @@
+body{
+	overflow:hidden !important;
+	height:100%;
+}
+
+.modified-user {
+    color:#FFF;
+    background-color: darkorange;
+    font-weight: bold;
+    position:absolute;
+    text-align:center;
+    padding:5px 10px;
+    border-radius:10px;
+}

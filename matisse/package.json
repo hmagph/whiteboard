@@ -1,0 +1,19 @@
+{
+    "name": "matisse"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "2.5.0"
+    , "jade": ">= 0.0.1"
+    , "socket.io":"0.8.7"
+    , "socket.io-client":"0.8.7"
+    , "redis":"0.7.1"
+    , "hiredis":"0.1.13"
+    , "nohm":"0.7.1"
+    , "uglify-js":"1.1.1"
+    , "lingo":"0.0.4"
+    , "async":"0.1.15"
+    , "express-resource":"0.2.3"
+    , "gzippo": "0.1.4"
+  }
+}

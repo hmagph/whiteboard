@@ -1,0 +1,6 @@
+authconf.js
+.idea/
+.idea/*
+matisse.iml
+*~
+/*.log
