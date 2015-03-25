@@ -54,7 +54,7 @@ application = (function () {
         app.use(everyauth.middleware());
         app.use(express.methodOverride());
         app.use(app.router);
-        app.use(gzippo.staticGzip(__dirname + '/public'));
+        app.use(gzippo.staticGzip('/public', {root:__dirname}));
         everyauth.helpExpress(app);
     };
 
@@ -99,7 +99,8 @@ application = (function () {
     app.post('/boards/update', routes.boards.update);
     app.post('/remove', routes.boards.remove);
     app.get('/about', function (req, res, next) {
-	    res.sendfile(__dirname + '/about.html');
+      // res.sendfile(__dirname + '/about.html');
+        res.sendfile('about.html', { root:__dirname });
     });
     app.get('/userinfo', routes.userinfo);
 
@@ -154,7 +155,7 @@ application = (function () {
                                             user.belongsTo(whiteBoard, 'ownedBoard', function(err, relExists) {
                                                 if (relExists) {
                                                 } else {
-                        	                        if(whiteBoard.property('createdBy')=="") whiteBoard.property('createdBy',userName);
+                                                  if(whiteBoard.property('createdBy')=="") whiteBoard.property('createdBy',userName);
                                                     user.link(whiteBoard, 'sharedBoard');
                                                     whiteBoard.link(user, 'userShared');
                                                     user.save(noop);
@@ -164,7 +165,7 @@ application = (function () {
                                         });
                                     }
                                 });
-                                res.sendfile(__dirname + '/board.html');
+                                res.sendfile('/board.html', {root:__dirname});
                             }
                             else {
                                 redirectToHome(req, res);
@@ -237,8 +238,9 @@ application = (function () {
     });
     logFile = fs.createWriteStream('./app.log', {flags: 'a'});
     app.use(express.logger({stream: logFile}));
-    
+
     collaboration.collaborate(io);
 
     require('./server/god-mode').enable(app, io, redisClient);
 }).call(this);
+
