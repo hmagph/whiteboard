@@ -15,5 +15,8 @@
     , "async":"0.1.15"
     , "express-resource":"0.2.3"
     , "gzippo": "0.1.4"
+  },
+  "scripts": {
+    "start" : "node matisse/app",
   }
 }
