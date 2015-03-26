@@ -1,0 +1,34 @@
+{
+    "name": "whiteboard"
+  , "version": "0.0.1"
+  , "private": true
+  , "scripts": {
+     "start": "node server.js"
+     , "test": "NODE_PATH=shared/ node_modules/.bin/mocha"
+    }
+  , "devDependencies": {
+      "supervisor": ""
+      , "jasmine-node": ""
+      , "mocha": ""
+      , "should": ""
+      , "node-inspector": ""
+  }
+  , "dependencies": {
+      "coffee-script": ""
+      , "express": ""
+      , "jade": ""
+      , "markdown-js": ""
+      , "piler": ""
+      , "useragent": ""
+      , "mongodb": ""
+      , "socket.io": ""
+      , "socket.io-client": ""
+      , "stylus": ""
+      , "backbone": ""
+      , "underscore": ""
+      , "underscore.string": ""
+      , "socket.io": ""
+      , "async": ""
+      , "gm": ""
+  }
+}
