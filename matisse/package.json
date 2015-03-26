@@ -17,6 +17,6 @@
     , "gzippo": "0.1.4"
   },
   "scripts": {
-    "start" : "node app",
+    "start" : "node app"
   }
 }
