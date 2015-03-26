@@ -174,16 +174,17 @@ html
                 div(class='row')
                   div(class='span8 columns whiteboardList', id='ownedBoardList')
                     ul(class='thumbnails')
-                    for board in ownedBoards
-                      li(class='span2 dashboard#{ownedBoards.indexOf(board) == 0 || ownedBoards.indexOf(board)%3 == 0 ? "Left" : "Right"}Thumbnail #{ownedBoards.indexOf(board) > 2 ? "ownedBoardHide" : ""}')
-                        div(class='thumbnail dashboardThumbnail dashboardWhiteBoardItem')
-                          div(class='delete-board', boardUrl='#{board.url}', name='#{board.name}', title='Delete Board')
-                            center
-                              div(class='delete-ico') 
-                          a(href='/boards/#{board.url}')
-                            img(src='images/140x120.gif', alt='')
-                          div(class='thumbnailText')
-                            p(class='thumbnailCaption editable', id='board-name-#{board.id}') #{board.name}
+                    - if (ownedBoards)
+                      for board in ownedBoards
+                        li(class='span2 dashboard#{ownedBoards.indexOf(board) == 0 || ownedBoards.indexOf(board)%3 == 0 ? "Left" : "Right"}Thumbnail #{ownedBoards.indexOf(board) > 2 ? "ownedBoardHide" : ""}')
+                          div(class='thumbnail dashboardThumbnail dashboardWhiteBoardItem')
+                            div(class='delete-board', boardUrl='#{board.url}', name='#{board.name}', title='Delete Board')
+                              center
+                                div(class='delete-ico') 
+                            a(href='/boards/#{board.url}')
+                              img(src='images/140x120.gif', alt='')
+                            div(class='thumbnailText')
+                              p(class='thumbnailCaption editable', id='board-name-#{board.id}') #{board.name}
                 div.row
                   div(class='span2 offset6', id='showAllCreateWhiteBoard')
                     a(class='pull-left', href='#', id='showOwned') Show all
