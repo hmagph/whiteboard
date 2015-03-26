@@ -11,6 +11,8 @@ application = (function () {
     var login = require('./server/login');
     //compress the static content
     var gzippo = require('gzippo');
+	var host = process.env.VCAP_APP_HOST || 'localhost';
+	var port = process.env.VCAP_APP_PORT || 8000;
 
     var Nohm = require('nohm').Nohm;
     var BoardModel = require(__dirname + '/models/BoardModel.js');
@@ -181,7 +183,7 @@ application = (function () {
     });
 
     app.use(use);
-    app.listen(8000);
+    app.listen(port);//8000);
     io.configure('production', function(){
         io.set('transports', ['xhr-polling']);
     });
