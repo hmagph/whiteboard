@@ -4,12 +4,16 @@ iShell = {};
  * Module for db interactions
  */
 (function() {
+    var redisHost = process.env.REDIS_HOST || "localhost";
+    var redisPort = process.env.REDIS_PORT || "16639";
+    var redisPassword = process.env.REDIS_PASSWORD || "";
     var Nohm = require('nohm').Nohm;
     var BoardModel = require(__dirname + '/models/BoardModel.js');
     var ShapesModel = require(__dirname + '/models/ShapesModel.js');
     var UserModel = require(__dirname + '/models/UserModel.js');
     var redis = require("redis");
-    var redisClient = redis.createClient(); //go thru redis readme for anyother config other than default: localhost 6379
+    var redisClient = redis.createClient(redisPort, redisHost); //go thru redis readme for anyother config other than default: localhost 6379
+    redisClient.auth(redisPassword);
     var fs = require('fs');
 
     redisClient.select(4);
