@@ -13,7 +13,7 @@ application = (function () {
     var gzippo = require('gzippo');
 
     /**BLUEMIX STUFF**/
-	var host = process.env.VCAP_APP_HOST || 'localhost';
+	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
     var redisHost = process.env.REDIS_HOST || "localhost";
     var redisPort = process.env.REDIS_PORT || "16639";

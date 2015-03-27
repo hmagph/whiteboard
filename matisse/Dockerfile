@@ -20,6 +20,10 @@ RUN ln -s /usr/bin/make /usr/bin/gmake
 ADD . /matisse
 RUN cd /matisse && npm install -d
 
+ENV REDIS_HOST localhost
+ENV REDIS_PORT 16689
+ENV REDIS_PASSWORD set_me
+
 WORKDIR /matisse
 CMD nodejs app.js
 
