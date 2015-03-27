@@ -11,7 +11,7 @@ application = (function () {
     var login = require('./server/login');
     //compress the static content
     var gzippo = require('gzippo');
-	var host = process.env.VCAP_APP_HOST || 'localhost';
+	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
 
     var Nohm = require('nohm').Nohm;

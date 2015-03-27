@@ -196,14 +196,15 @@ html
                 div(class='row')
                   div(class='span8 columns whiteboardList')
                     ul(class='thumbnails')
-                    for board in sharedBoards
-                      li(class='span2 dashboard#{sharedBoards.indexOf(board) == 0 || sharedBoards.indexOf(board)%3 == 0 ? "Left" : "Right"}Thumbnail #{sharedBoards.indexOf(board) > 2 ? "sharedBoardHide" : ""}')
-                        div(class='thumbnail dashboardThumbnail dashboardWhiteBoardItem')
-                          a(href='/boards/#{board.url}')
-                            img(src='images/140x120.gif', alt='')
-                          div(class='thumbnailText')
-                            p.thumbnailCaption #{board.name}
-                            p.thumbnailCaption #{board.createdBy}
+                    - if (sharedBoards)
+                      for board in sharedBoards
+                        li(class='span2 dashboard#{sharedBoards.indexOf(board) == 0 || sharedBoards.indexOf(board)%3 == 0 ? "Left" : "Right"}Thumbnail #{sharedBoards.indexOf(board) > 2 ? "sharedBoardHide" : ""}')
+                          div(class='thumbnail dashboardThumbnail dashboardWhiteBoardItem')
+                            a(href='/boards/#{board.url}')
+                              img(src='images/140x120.gif', alt='')
+                            div(class='thumbnailText')
+                              p.thumbnailCaption #{board.name}
+                              p.thumbnailCaption #{board.createdBy}
                 div.row
                   div(class='span2 offset6', id='showAllCreateWhiteBoard')
                     a(class='pull-left', href='#', id='showShared') Show all
