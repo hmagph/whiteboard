@@ -25,6 +25,7 @@ iShell = {};
         if (err) {
             console.log("===============Nohm Error=======================");
             console.log(err);
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH");
             console.log("======================================");
         }
     };
