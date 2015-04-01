@@ -14,6 +14,11 @@ usermod -a -G docker vagrant
 sudo echo 'DOCKER_OPTS="-r=true -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock ${DOCKER_OPTS}"' > /etc/default/docker
 sudo service docker restart
 apt-get -qq install python-pip
+wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+wget -O cf-cli_amd64.deb "https://cli.run.pivotal.io/stable?release=debian64&source=github"
+sudo dpkg -i cf-cli_amd64.deb
+wget "https://static-ice.ng.bluemix.net/icecli-2.0.zip"
+sudo pip install icecli-2.0.zip
 
 SCRIPT
 
