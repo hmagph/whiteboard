@@ -15,12 +15,12 @@ application = (function () {
     /**BLUEMIX STUFF**/
 	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
-   /* var redisHost = process.env.REDIS_HOST || "localhost";
+  	var redisHost = process.env.REDIS_HOST || "localhost";
     var redisPort = process.env.REDIS_PORT || "16639";
-    var redisPassword = process.env.REDIS_PASSWORD || "";*/
-    var redisHost = process.env.VCAP_SERVICES.rediscloud.credentials.hostname;
+    var redisPassword = process.env.REDIS_PASSWORD || "";
+    /*var redisHost = process.env.VCAP_SERVICES.rediscloud.credentials.hostname;
     var redisPort = process.env.VCAP_SERVICES.rediscloud.credentials.port;
-    var redisPassword = process.env.VCAP_SERVICES.rediscloud.credentials.password;
+    var redisPassword = process.env.VCAP_SERVICES.rediscloud.credentials.password;*/
 
     var Nohm = require('nohm').Nohm;
     var BoardModel = require(__dirname + '/models/BoardModel.js');
