@@ -17,7 +17,7 @@ RUN ln -s /usr/bin/nodejs /usr/local/bin/node
 RUN ln -s /usr/bin/make /usr/bin/gmake
 
 # build the custom sampler for jmeter & clear results directory
-ADD . /matisse
+ADD ./matisse /matisse
 RUN cd /matisse && npm install -d
 
 ENV REDIS_HOST localhost
