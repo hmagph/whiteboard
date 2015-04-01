@@ -25,6 +25,6 @@ ENV REDIS_PORT 16689
 ENV REDIS_PASSWORD set_me
 
 WORKDIR /matisse
-CMD nodejs app.js
+ENTRYPOINT ["/usr/bin/nodejs", "app.js"]
 
 
