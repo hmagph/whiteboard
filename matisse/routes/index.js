@@ -58,6 +58,10 @@ var MatisseServer = new function() {
 	var server = Object.create(new events.EventEmitter);
 
     server.on('valid session', function(req, res, session_data) {
+        console.log("valid session req");
+        console.log(req);
+        console.log("valid session data");
+        console.log(session_data);
         var userObj = new UserModel();
         var userID = userObj.getUserID(session_data);
         if (typeof(userID) != "undefined" && userID != null) {
@@ -145,10 +149,12 @@ exports.favicon = function (req, res, next) {
 
 exports.boards = {
     index:function (req, res, next) {
+        console.log("index: ");
+        console.log(req);
 	    var chars = "0123456789abcdefghiklmnopqrstuvwxyz";
         var string_length = 8;
         randomstring = '';
-		var session_data = req.session.auth;
+		var session_data = req.session.passport;
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		var userName = userObj.getUserFromSession(session_data).name;
