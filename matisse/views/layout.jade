@@ -12,16 +12,15 @@ html
     script(type='text/javascript', src='/javascripts/thirdparty/jquery/jquery.jeditable.mini.js')
     script(type='text/javascript', src='/javascripts/matisse/inline-edit.js')
     script(type='text/javascript', src='/javascripts/thirdparty/bootstrap/bootstrap.js')
-    script(type='text/javascript')
-
-    //  var resizeOrReadyHandler = function() {
-    //    var rtContentObj = $('#loginRightContent');
-    //    var height = $(window).height() - $('#loginHeader').height() - $('#loginFooter').height() - 40;
-    //    rtContentObj.css('min-height', height );
-    //    rtContentObj.show();
-    //  };
-    //  $(window).resize(resizeOrReadyHandler);
-    //  $(document).ready(function() {setTimeout(resizeOrReadyHandler, 100);});
+    script(type='text/javascript').
+      var resizeOrReadyHandler = function() {
+        var rtContentObj = $('#loginRightContent');
+        var height = $(window).height() - $('#loginHeader').height() - $('#loginFooter').height() - 40;
+        rtContentObj.css('min-height', height );
+        rtContentObj.show();
+      };
+      $(window).resize(resizeOrReadyHandler);
+      $(document).ready(function() {setTimeout(resizeOrReadyHandler, 100);});
   body!= body
     div(class='container')
       div(class='row', id='loginHeader')
