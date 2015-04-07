@@ -31,7 +31,7 @@ html
 
         div(class='span8 rightHeader')
           div(class='text', id='testimonial')
-            - if(everyauth.loggedIn)
+            - if(everyauth.loggedIn || ownedBoards)
                 div(class='row', id='rightheaderContent')
                   div.span4
                     div(class='btn-toolbar', id='rightHeaderButton')
@@ -66,7 +66,7 @@ html
       div(class='row content', id='loginContent')
 
         div(class='span4', id='loginLeftContent')
-          - if(everyauth.loggedIn)
+          - if(everyauth.loggedIn || passport)
               div.row
                 div.span4
                   h3 Welcome,
@@ -104,6 +104,17 @@ html
                         div(class='pull-right')
                           h6 via
                           a(class='loginSource pull-right') Google
+                - else if (passport)
+                    div.span1
+                      img(class="profilePic",src="#{'images/default.jpg'}")
+                    div(class='span3')
+                      div.profileDetails
+                        div(class='pull-left')
+                          a #{passport.user._json.firstName}
+                          a(href="/logout", id="logoutLink", class="logoutLink") (Logout)
+                        div(class='pull-right')
+                          h6 via
+                          a(class='loginSource pull-right') Google
               div(class='row')
                 hr(class='leftContentDivider')
               div.row
@@ -122,7 +133,7 @@ html
               div#demovid
                 iframe(width='300', height='169', src='https://www.youtube.com/embed/F4hA1A1PVxw', frameborder='0', allowfullscreen='true')
         div(class='span8', id='loginRightContent')
-          - if(!everyauth.loggedIn)
+          - if(!everyauth.loggedIn || ownedBoards == undefined)
                 div(class='row')
                   div(class='span4')
                     h3 &nbsp;

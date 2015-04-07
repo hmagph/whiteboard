@@ -16,7 +16,7 @@ application = (function () {
     var gzippo = require('gzippo');
 
     /**BLUEMIX STUFF**/
-	var host = process.env.VCAP_APP_HOST || 'thematisse.org';
+	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
   	/*var redisHost = process.env.REDIS_HOST || "localhost";
     var redisPort = process.env.REDIS_PORT || "16639";
@@ -111,26 +111,22 @@ application = (function () {
     app.get('/', routes.index);
     app.get('/favicon', exports.favicon);
     app.get('/boards', routes.boards.index);
-    app.get('/login', passport.authenticate('openidconnect', login.googleUser)); 
+    app.get('/login', passport.authenticate('openidconnect')); 
     app.resource('api', routes.api);
     app.post('/boards', routes.boards.index);
     app.post('/boards/update', routes.boards.update);
     app.post('/remove', routes.boards.remove);
     app.get('/about', function (req, res, next) {
-      // res.sendfile(__dirname + '/about.html');
         res.sendfile('about.html', { root:__dirname });
     });
     app.get('/failure', function(req, res) { 
              res.send('login failed'); });
     app.get('/userinfo', routes.userinfo);
     app.get('/auth/sso/callback', function(req,res,next) {
-        console.log('req callback: ', req);
-        console.log('res callback: ', res);
-        console.log('next callback: ', next);
-            passport.authenticate('openidconnect',{
-                 successRedirect: '/boards',                            
-                 failureRedirect: '/failure',                        
-          })(req,res,next);
+        passport.authenticate("openidconnect", {
+            successRedirect: "/",
+            failureRedirect: "/login",
+        })(req, res, next);
     });
 
     var logErrorOrExecute = function (err, param, callback) {
@@ -166,8 +162,6 @@ application = (function () {
                         }
                         else {
                             if (ids && ids.length != 0) {
-                                console.log("appjs session_data");
-                                console.log(req);
                                 var session_data = req.session.auth;
                                 var userObj = new UserModel();
                                 var userID = userObj.getUserID(session_data);

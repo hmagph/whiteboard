@@ -86,6 +86,7 @@ module.exports = {
 			return user;
 		}
 		everyauth.debug = true;		
+//-------------------- EveryAuth END---------------------------------//
 
 //======================= PASSPORT STARTS HERE================================
 
@@ -107,7 +108,9 @@ module.exports = {
 		var authorization_url = ssoConfig.credentials.authorizationEndpointUrl;
 		var token_url = ssoConfig.credentials.tokenEndpointUrl;
 		var issuer_id = ssoConfig.credentials.issuerIdentifier;
-		var callback_url = "http://thematisse.org:8000/auth/sso/callback";//(process.env.VCAP_APP_HOST || 'thematisse.org').concat('/auth/sso/callback');//'https://wbsso-yyq9oxtgi6-cwg2.iam.ibmcloud.com/idaas/mtfim/sps/idaas/login/google/callback';        
+		var host = process.env.VCAP_APP_HOST || 'matisse.org';
+		var port = process.env.VCAP_APP_PORT || 8000;
+		var callback_url = "http://" + host + ":" + port + "/auth/sso/callback";
 
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
@@ -121,11 +124,25 @@ module.exports = {
 		                 skipUserProfile: true,
 		                 issuer: issuer_id}, 
 			function(accessToken, refreshToken, profile, done) {
-			         	process.nextTick(function() {
-							profile.accessToken = accessToken;
-							profile.refreshToken = refreshToken;
-							done(null, profile);
-			         	})
+	         	process.nextTick(function() {
+					profile.accessToken = accessToken;
+					profile.refreshToken = refreshToken;
+					done(null, profile);
+
+			   		var user = profile;
+					var userDetails = users[user.id] || (users[user.id] = addUser('google', user));
+					var data = {
+							userID: 'google' +"- " + userDetails['google'].id
+					};
+					console.error("DEBUG login Strategy:", data);
+					var newUser = new UserModel();
+					newUser.store(data, function (err) {
+						if (!err)
+							console.log("saved new user to DB");
+						else
+							console.log("Could not Save user, possibly exist in DB");
+					});
+	         	})
 		}); 
 
 		passport.use(Strategy); 
@@ -142,23 +159,20 @@ module.exports = {
 	},
 
 	googleUser: function(req, res, next){
-       		var user = req.user;
-       		var userName = req.user.username;
-       		console.log("google user ");
-       		console.log(user);
-       		console.log(userName);
-            //user.refreshToken = accessSecret.refresh_token;
-            //user.expiresIn = accessSecret.expires_in;
-			var userDetails = users[userName] || (users[userName] = addUser('google', user));
-			var data = {
-					userID: 'google' +"- " + userDetails['google'].userName
-			};
-					var newUser = new UserModel();
-			newUser.store(data, function (err) {
-					if (!err) console.log("saved new user to DB");
-					else console.log("Could not Save user, possibly exist in DB");
-			});
-			return userDetails;              
+		console.log("googleUser:", req.session);
+		var users = {};
+		res.redirect("/");
+   		var user = req.session.passport.user;
+        user.expiresIn = user.expires_in;
+		var userDetails = users[userName] || (users[userName] = addUser('google', user));
+		var data = {
+				userID: 'google' +"- " + userDetails['google'].userName
+		};
+				var newUser = new UserModel();
+		newUser.store(data, function (err) {
+				if (!err) console.log("saved new user to DB");
+				else console.log("Could not Save user, possibly exist in DB");
+		});
+		return req.user;
 	}
 }
-//-------------------- EveryAuth END---------------------------------//
