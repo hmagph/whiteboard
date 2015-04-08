@@ -157,7 +157,7 @@ application = (function () {
 
     app.resource('boards', {
         show:function (req, res, next) {
-            if (req.loggedIn || req.session.passport) {
+            if (req.loggedIn || (req.session.passport && req.session.passport.user)) {
                 if (req.params.id != "favicon") {
                     var whiteBoard = new BoardModel();
                     whiteBoard.find({url: req.params.board.replace(/[^a-zA-Z 0-9]+/g,'')}, function (err, ids) {

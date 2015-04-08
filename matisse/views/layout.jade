@@ -31,7 +31,7 @@ html
 
         div(class='span8 rightHeader')
           div(class='text', id='testimonial')
-            - if(everyauth.loggedIn || ownedBoards)
+            - if(everyauth.loggedIn || passport)
                 div(class='row', id='rightheaderContent')
                   div.span4
                     div(class='btn-toolbar', id='rightHeaderButton')
