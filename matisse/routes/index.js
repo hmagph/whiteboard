@@ -13,7 +13,8 @@ var renderDashboard = function(res, ownedBoards, sharedBoards) {
         createdNum: 0, 
         sharedNum: 0, 
         ownedBoards:  [], 
-        sharedBoards: []  
+        sharedBoards: [],
+        passport: undefined
     }, actualValues = {};
 
     actualValues['title'] = defaults.title;
@@ -21,7 +22,8 @@ var renderDashboard = function(res, ownedBoards, sharedBoards) {
     actualValues['sharedBoards'] = (sharedBoards)? sharedBoards: defaults.sharedBoards;
     actualValues['createdNum'] = actualValues['ownedBoards'].length;
     actualValues['sharedNum'] = actualValues['sharedBoards'].length;
-
+    actualValues['passport'] = (res.req.session.passport.user) ? res.req.session.passport : defaults.passport;
+    //console.error("DEBUG res", res);
     res.render('index', actualValues);
 };
 
@@ -58,8 +60,13 @@ var MatisseServer = new function() {
 	var server = Object.create(new events.EventEmitter);
 
     server.on('valid session', function(req, res, session_data) {
+        console.log("valid session req");
+        console.log(req);
+        console.log("valid session data");
+        console.log(session_data);
         var userObj = new UserModel();
         var userID = userObj.getUserID(session_data);
+        console.error("DEBUG: userID", userID, session_data);
         if (typeof(userID) != "undefined" && userID != null) {
             server.emit('valid user', req, res, userID);
         } else {
@@ -72,15 +79,20 @@ var MatisseServer = new function() {
 
         loggedInUser.find({userID:userID}, function(err,ids) {
             if (err) {
+                console.error("DEBUG error on finding user", err);
                 renderLogin(res);
             } else {
+                console.error("DEBUG found users", ids);
                 loggedInUser.load(ids[0], function (err, props) {
                     if (err) {
+                        console.error("DEBUG error on loading user", err);
+                        console.error("DEBUG error ids contents: ", ids[0]);
                         renderLogin(res);
                     } else {
                         // get the boards linked with this user
                         loggedInUser.getAll('Board', 'ownedBoard', function (err, boardIds) {
                             if (err) {
+                                console.error("DEBUG error on getting boards", err);
                                 renderDashboard(res);
                             } else {
                                 server.emit('valid owned boards', req, res, loggedInUser, boardIds);
@@ -96,6 +108,7 @@ var MatisseServer = new function() {
         collectBoards(req, res, boardIds, function(boards) {
             loggedInUser.getAll('Board', 'sharedBoard', function (err, sharedBoardIds) {
                 if (err) {
+                    console.error("DEBUG error on shared boards", err);
                     renderDashboard(res);
                 } else {
                     server.emit('valid shared boards', req, res, loggedInUser, boards, sharedBoardIds);
@@ -106,6 +119,7 @@ var MatisseServer = new function() {
 
     server.on('valid shared boards', function(req, res, loggedInUser, boards, sharedBoardIds) {
         collectBoards(req, res, sharedBoardIds, function(sharedBoards) {
+            console.error("DEBUG render the dashboard");
             renderDashboard(res, boards, sharedBoards);
         });
     });
@@ -118,11 +132,16 @@ var MatisseServer = new function() {
         renderDashboard(res);
     });
 
-    server.render = function(req, res) {
-        var session_data = req.session.auth;
+    server.render = function(req, res) {        
+        var session_data = req.session.auth || req.session.passport;
         if (session_data) {
             server.emit('valid session', req, res, session_data);
+            if (req.session)
+                console.error("DEBUG: SESSION - ", req.session);
         } else {
+            console.error("DEBUG: INVALID LOGIN");
+            if (req.session)
+                console.error("DEBUG: SESSION - ", req.session);
             server.emit('invalid login', res);
         }
 	};
@@ -132,6 +151,7 @@ var MatisseServer = new function() {
 
 
 exports.index = function (req, res) {
+    console.error("DEBUG index req", req);
     Object.create(MatisseServer).render(req, res);
 };
 
@@ -145,10 +165,11 @@ exports.favicon = function (req, res, next) {
 
 exports.boards = {
     index:function (req, res, next) {
+        console.error("DEBUG boards.index");
 	    var chars = "0123456789abcdefghiklmnopqrstuvwxyz";
         var string_length = 8;
         randomstring = '';
-		var session_data = req.session.auth;
+		var session_data = req.session.auth || req.session.passport;
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		var userName = userObj.getUserFromSession(session_data).name;
@@ -167,16 +188,18 @@ exports.boards = {
         };
         var whiteBoard = new BoardModel();
         whiteBoard.store(data, function (err) {
+            console.error("DEBUG whiteboard create error:", err);
             if (err === 'invalid') {
+                console.error("DEBUG whiteboard create error:", whiteBoard.errors);
 		        next(whiteBoard.errors);
 	        } else if (err) {
 		        next(err);
 	        } else {
-
 		        userObj.linkBoard(whiteBoard, userID, false);
 		        res.writeHead(302, {
 		            'Location':randomstring
 		        });
+                console.error("DEBUG whiteboard create:", res);
 		        res.end();
 
 	        }
@@ -185,7 +208,7 @@ exports.boards = {
 	
 	remove:function (req, res, next) {
 		var boardUrl = req.body.boardUrl;
-		var session_data = req.session.auth;
+		var session_data = req.session.auth || req.session.passport;
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		// remove shapes from the board

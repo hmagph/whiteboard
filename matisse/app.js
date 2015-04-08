@@ -9,6 +9,9 @@ application = (function () {
     var everyauth = require('everyauth');
     var collaboration = require('./server/collaboration');
     var login = require('./server/login');
+    //Bluemix SSO service
+    var passport = require('passport');
+    var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy; 
     //compress the static content
     var gzippo = require('gzippo');
 
@@ -61,9 +64,9 @@ application = (function () {
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
         app.use(express.cookieParser());
-        app.use(express.session({
-            secret:'foobar'
-        }));
+        app.use(express.session({ secret: 'keyboard cat' }));
+        app.use(passport.initialize());
+        app.use(passport.session()); 
         app.use(express.bodyParser());
         app.use(everyauth.middleware());
         app.use(express.methodOverride());
@@ -108,18 +111,31 @@ application = (function () {
     app.get('/', routes.index);
     app.get('/favicon', exports.favicon);
     app.get('/boards', routes.boards.index);
+    app.get('/login', passport.authenticate('openidconnect')); 
     app.resource('api', routes.api);
     app.post('/boards', routes.boards.index);
     app.post('/boards/update', routes.boards.update);
     app.post('/remove', routes.boards.remove);
     app.get('/about', function (req, res, next) {
-      // res.sendfile(__dirname + '/about.html');
         res.sendfile('about.html', { root:__dirname });
     });
+    app.get('/failure', function(req, res) { 
+             res.send('login failed'); });
     app.get('/userinfo', routes.userinfo);
+    app.get('/auth/sso/callback', function(req,res,next) {
+        passport.authenticate("openidconnect", {
+            successRedirect: "/",
+            failureRedirect: "/login",
+        })(req, res, next);
+    });
+    app.get('/logoutsso', function(req, res){
+      req.logOut();
+      res.redirect('/');
+    });
 
     var logErrorOrExecute = function (err, param, callback) {
         if (err) {
+            console.error("DEBUG error or execute:", err);
             console.log(err);
         }
         else {
@@ -142,16 +158,18 @@ application = (function () {
 
     app.resource('boards', {
         show:function (req, res, next) {
-            if (req.loggedIn) {
+            if (req.loggedIn || (req.session.passport && req.session.passport.user)) {
                 if (req.params.id != "favicon") {
                     var whiteBoard = new BoardModel();
                     whiteBoard.find({url: req.params.board.replace(/[^a-zA-Z 0-9]+/g,'')}, function (err, ids) {
                         if (err) {
+                            console.error("DEBUG find board error:", err);
                             redirectToHome(req, res);
                         }
                         else {
                             if (ids && ids.length != 0) {
-                                var session_data = req.session.auth;
+                                var session_data = req.session.auth || req.session.passport;
+                                console.error("DEBUG find board:", session_data);
                                 var userObj = new UserModel();
                                 var userID = userObj.getUserID(session_data);
                                 var userName = userObj.getUserFromSession(session_data).name;
@@ -164,6 +182,7 @@ application = (function () {
                                         var user = new UserModel;
                                         user.load(ids[0], function (err, props) {
                                             if (err) {
+                                                console.error("DEBUG user load error:", err);
                                                 return err;
                                             }
                                             user.belongsTo(whiteBoard, 'ownedBoard', function(err, relExists) {
@@ -257,4 +276,3 @@ application = (function () {
 
     require('./server/god-mode').enable(app, io, redisClient);
 }).call(this);
-
