@@ -206,7 +206,7 @@ exports.boards = {
 	
 	remove:function (req, res, next) {
 		var boardUrl = req.body.boardUrl;
-		var session_data = req.session.auth;
+		var session_data = req.session.auth || req.session.passport;
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		// remove shapes from the board
