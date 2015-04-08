@@ -23,7 +23,7 @@ var renderDashboard = function(res, ownedBoards, sharedBoards) {
     actualValues['createdNum'] = actualValues['ownedBoards'].length;
     actualValues['sharedNum'] = actualValues['sharedBoards'].length;
     actualValues['passport'] = (res.req.session.passport.user) ? res.req.session.passport : defaults.passport;
-    console.error("DEBUG res", res);
+    //console.error("DEBUG res", res);
     res.render('index', actualValues);
 };
 
@@ -86,6 +86,7 @@ var MatisseServer = new function() {
                 loggedInUser.load(ids[0], function (err, props) {
                     if (err) {
                         console.error("DEBUG error on loading user", err);
+                        console.error("DEBUG error ids contents: ", ids[0]);
                         renderLogin(res);
                     } else {
                         // get the boards linked with this user
@@ -167,7 +168,7 @@ exports.boards = {
 	    var chars = "0123456789abcdefghiklmnopqrstuvwxyz";
         var string_length = 8;
         randomstring = '';
-		var session_data = req.session.passport;
+		var session_data = req.session.auth || req.session.passport;
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		var userName = userObj.getUserFromSession(session_data).name;

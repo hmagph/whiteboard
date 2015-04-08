@@ -135,6 +135,7 @@ application = (function () {
 
     var logErrorOrExecute = function (err, param, callback) {
         if (err) {
+            console.error("DEBUG error or execute:", err);
             console.log(err);
         }
         else {
