@@ -111,7 +111,7 @@ module.exports = {
 		var host = process.env.VCAP_APP_HOST || 'matisse.org';
 		var port = process.env.VCAP_APP_PORT || 8000;
 		var callback_url = "http://" + host + ":" + port + "/auth/sso/callback";
-
+		console.error("DEBUG callback url:", callback_url);
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
 		                 authorizationURL : authorization_url,
