@@ -186,16 +186,18 @@ exports.boards = {
         };
         var whiteBoard = new BoardModel();
         whiteBoard.store(data, function (err) {
+            console.error("DEBUG whiteboard create error:", err);
             if (err === 'invalid') {
+                console.error("DEBUG whiteboard create error:", whiteBoard.errors);
 		        next(whiteBoard.errors);
 	        } else if (err) {
 		        next(err);
 	        } else {
-
 		        userObj.linkBoard(whiteBoard, userID, false);
 		        res.writeHead(302, {
 		            'Location':randomstring
 		        });
+                console.error("DEBUG whiteboard create:", res);
 		        res.end();
 
 	        }

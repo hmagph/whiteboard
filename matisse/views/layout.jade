@@ -111,7 +111,7 @@ html
                       div.profileDetails
                         div(class='pull-left')
                           a #{passport.user._json.firstName}
-                          a(href="/logout", id="logoutLink", class="logoutLink") (Logout)
+                          a(href="/logoutsso", id="logoutLink", class="logoutLink") (Logout)
                         div(class='pull-right')
                           h6 via
                           a(class='loginSource pull-right') Google
@@ -133,7 +133,7 @@ html
               div#demovid
                 iframe(width='300', height='169', src='https://www.youtube.com/embed/F4hA1A1PVxw', frameborder='0', allowfullscreen='true')
         div(class='span8', id='loginRightContent')
-          - if(!everyauth.loggedIn || ownedBoards == undefined)
+          - if(!everyauth.loggedIn && passport == undefined)
                 div(class='row')
                   div(class='span4')
                     h3 &nbsp;

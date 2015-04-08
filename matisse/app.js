@@ -128,6 +128,10 @@ application = (function () {
             failureRedirect: "/login",
         })(req, res, next);
     });
+    app.get('/logoutsso', function(req, res){
+      req.logOut();
+      res.redirect('/');
+    });
 
     var logErrorOrExecute = function (err, param, callback) {
         if (err) {
@@ -143,7 +147,7 @@ application = (function () {
 
     var redirectToHome = function(req, res) {
         res.writeHead(302, {
-            'Location': 'https://'+req.headers.host
+            'Location': 'http://'+req.headers.host
         });
         if(req.session) {
             req.session.redirectPath = req.url;
@@ -153,16 +157,18 @@ application = (function () {
 
     app.resource('boards', {
         show:function (req, res, next) {
-            if (req.loggedIn) {
+            if (req.loggedIn || req.session.passport) {
                 if (req.params.id != "favicon") {
                     var whiteBoard = new BoardModel();
                     whiteBoard.find({url: req.params.board.replace(/[^a-zA-Z 0-9]+/g,'')}, function (err, ids) {
                         if (err) {
+                            console.error("DEBUG find board error:", err);
                             redirectToHome(req, res);
                         }
                         else {
                             if (ids && ids.length != 0) {
-                                var session_data = req.session.auth;
+                                var session_data = req.session.auth || req.session.passport;
+                                console.error("DEBUG find board:", session_data);
                                 var userObj = new UserModel();
                                 var userID = userObj.getUserID(session_data);
                                 var userName = userObj.getUserFromSession(session_data).name;
@@ -175,6 +181,7 @@ application = (function () {
                                         var user = new UserModel;
                                         user.load(ids[0], function (err, props) {
                                             if (err) {
+                                                console.error("DEBUG user load error:", err);
                                                 return err;
                                             }
                                             user.belongsTo(whiteBoard, 'ownedBoard', function(err, relExists) {
