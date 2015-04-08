@@ -124,7 +124,9 @@ module.exports = {
 		                 skipUserProfile: true,
 		                 issuer: issuer_id}, 
 			function(accessToken, refreshToken, profile, done) {
+				console.error("DEBUG before nexttick()");
 	         	process.nextTick(function() {
+	         		console.error("DEBUG in nexttick()");
 					profile.accessToken = accessToken;
 					profile.refreshToken = refreshToken;
 					done(null, profile);
@@ -137,10 +139,13 @@ module.exports = {
 					console.error("DEBUG login Strategy:", data);
 					var newUser = new UserModel();
 					newUser.store(data, function (err) {
-						if (!err)
+						if (!err) {
 							console.log("saved new user to DB");
-						else
+							console.error("DEBUG saved new user to db");
+						} else {
 							console.log("Could not Save user, possibly exist in DB");
+							console.error("User not saved, possibly in DB");
+						}
 					});
 	         	})
 		}); 

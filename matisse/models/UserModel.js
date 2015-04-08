@@ -58,7 +58,7 @@ var userModel = module.exports = nohm.model('User', {
 	    }  else if (session_data.facebook) {
 		    userID = (session_data.facebook.user)? "facebook- " + session_data.facebook.user.id:null;
 	    } else if (session_data.user) {
-	    	console.error("DEBUG get userid of user:" session_data.user);
+	    	console.error("DEBUG get userid of user:", session_data.user);
 		    userID = (session_data.user.id) ? "google- " + session_data.user.id : null;
 	    }
 
