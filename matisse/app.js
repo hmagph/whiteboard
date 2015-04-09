@@ -18,6 +18,7 @@ application = (function () {
     /**BLUEMIX STUFF**/
 	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
+    console.error("DEBUG host & port for app:", host, port);
   	/*var redisHost = process.env.REDIS_HOST || "localhost";
     var redisPort = process.env.REDIS_PORT || "16639";
     var redisPassword = process.env.REDIS_PASSWORD || "";*/

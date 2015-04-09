@@ -151,7 +151,7 @@ var MatisseServer = new function() {
 
 
 exports.index = function (req, res) {
-    console.error("DEBUG index req", req);
+    console.error("DEBUG index req", req.session.passport);
     Object.create(MatisseServer).render(req, res);
 };
 
