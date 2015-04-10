@@ -159,7 +159,7 @@ application = (function () {
 
     app.resource('boards', {
         show:function (req, res, next) {
-            if (req.loggedIn || (req.session.passport && req.session.passport.user)) {
+            if (login.isLoggedIn(req.session)) {
                 if (req.params.id != "favicon") {
                     var whiteBoard = new BoardModel();
                     whiteBoard.find({url: req.params.board.replace(/[^a-zA-Z 0-9]+/g,'')}, function (err, ids) {
@@ -169,7 +169,7 @@ application = (function () {
                         }
                         else {
                             if (ids && ids.length != 0) {
-                                var session_data = req.session.auth || req.session.passport;
+                                var session_data = login.isLoggedIn(req.session);
                                 console.error("DEBUG find board:", session_data);
                                 var userObj = new UserModel();
                                 var userID = userObj.getUserID(session_data);

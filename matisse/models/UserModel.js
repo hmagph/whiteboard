@@ -122,27 +122,35 @@ var userModel = module.exports = nohm.model('User', {
 	    });
 	},
 	getUserFromSession: function(session_data) {
-	  var user = {'id': null};
-    if (typeof(session_data.twitter) != "undefined") {
-      user.id  = session_data.twitter.user.id;
-      user.twitter = session_data.twitter.user;
-      user.loginService = "Twitter";
-      user.name  = session_data.twitter.user.name;
-    }
-    else if (session_data.facebook) {
-      user.id  = session_data.facebook.user.id;
-      user.facebook = session_data.facebook.user;
-      user.loginService = "Facebook";
-      user.name  = session_data.facebook.user.name;
-    }
-    else if (session_data.google) {
-      user.id  = session_data.google.user.id;
-      user.google = session_data.google.user;
-      user.loginService = "Google";
-      user.name  = session_data.google.user.name;
-    }
-    console.error("DEBUG get user from session: ", user);
-    return user;
+		var user = {'id': null};
+		user.logoutLink = "/logout";
+	    if (typeof(session_data.twitter) != "undefined") {
+	      user.id  = session_data.twitter.user.id;
+	      user.twitter = session_data.twitter.user;
+	      user.loginService = "Twitter";
+	      user.name  = session_data.twitter.user.name;
+	    }
+	    else if (session_data.facebook) {
+	      user.id  = session_data.facebook.user.id;
+	      user.facebook = session_data.facebook.user;
+	      user.loginService = "Facebook";
+	      user.name  = session_data.facebook.user.name;
+	    }
+	    else if (session_data.google) {
+	      user.id  = session_data.google.user.id;
+	      user.google = session_data.google.user;
+	      user.loginService = "Google";
+	      user.name  = session_data.google.user.name;
+	    }
+	    else if (session_data.user) {
+	    	user.id = session_data.user.id;
+	    	user.google = session_data.user._json;
+	    	user.loginService = "Google";
+	    	user.name = session_data.user._json.firstName;
+	    	user.logoutLink = "/logoutsso";
+	    }	    
+	    console.error("DEBUG get user from session: ", user);
+	    return user;
   }
     }
 });

@@ -41,19 +41,21 @@ define(["matisse", "matisse.fabric", "matisse.comm", "matisse.main", "matisse.co
                */
               $.get('/userinfo', 
                     function(info) {
-		        /* check if userName is missing, show welcome message*/
-		        if(matisse.userName == null) {
+				        /* check if userName is missing, show welcome message*/
+				        if(matisse.userName == null) {
                             // key is login-service name like 'twitter', 'google'
                             var userInfoKey = info.loginService.toLowerCase();
                             var user = info[userInfoKey];
-		            matisse.userName = user.name;
+				            matisse.userName = user.name || info.name;
                             matisse.userProfilePic = user.profile_image_url || user.picture;
                             matisse.userLoginService = info.loginService;
-		            $('#userProfilePic').append('<img src="'+matisse.userProfilePic+'" alt="pic" class="b-userpic"></img>');
-		            $('#userProfilePicBig').append('<img src="'+matisse.userProfilePic+'" alt="pic" class="b-userpic-big"></img>');
-		            $('#userName').html(matisse.userName);
-		            $('#userLoginService').html(matisse.userLoginService);
-		        }
+                            matisse.userLogoutLink = info.logoutLink;
+				            $('#userProfilePic').append('<img src="'+matisse.userProfilePic+'" alt="pic" class="b-userpic"></img>');
+				            $('#userProfilePicBig').append('<img src="'+matisse.userProfilePic+'" alt="pic" class="b-userpic-big"></img>');
+				            $('#userName').html(matisse.userName);
+				            $('#userLoginService').html(matisse.userLoginService);
+				            $('#userLogoutLink').attr("href", matisse.userLogoutLink);
+				        }
                     }, 'json');
 
 	    /* Redirecting the user to home page when an active board is deleted.*/
