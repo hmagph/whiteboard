@@ -102,17 +102,18 @@ module.exports = {
 		// this application. For details of its content, please refer to
 		// the document or sample of each service.  
 		var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
+		var applicationEnv = JSON.parse(process.env.VCAP_APPLICATION);
 		var ssoConfig = services.SingleSignOn[0]; 
 		var client_id = ssoConfig.credentials.clientId;
 		var client_secret = ssoConfig.credentials.secret;
 		var authorization_url = ssoConfig.credentials.authorizationEndpointUrl;
 		var token_url = ssoConfig.credentials.tokenEndpointUrl;
 		var issuer_id = ssoConfig.credentials.issuerIdentifier;
-		var host = process.env.VCAP_APP_HOST || process.env.CONTAINER_HOSTNAME || 'matisse.org';
+		var host = process.env.VCAP_APP_HOST || applicationEnv.application_uris[0] || 'matisse.org';
 		var port = process.env.VCAP_APP_PORT || 8000;
-		var callback_url = process.env.CONTAINER_HOSTNAME ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
+		var callback_url = applicationEnv.application_uris[0] ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
 		console.error("DEBUG callback url:", callback_url);
-		console.error("DEBUG process.env.VCAP_APPLICATION:", JSON.parse(process.env.VCAP_APPLICATION) || "nothing");
+		console.error("DEBUG application url:", applicationEnv.application_uris[0] || "nothing");
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
 		                 authorizationURL : authorization_url,
