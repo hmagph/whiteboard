@@ -1,10 +1,9 @@
 var passport = require('passport');
 var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy; 
-//var app = require('./app');
+var everyauth = require('everyauth');
 module.exports = {
 	authenticate: function() {
 		var UserModel = require(__dirname + '/../models/UserModel.js');
-		var everyauth = require('everyauth');
 		var conf = require('./conf');
 
 		//-------------------- EveryAuth START---------------------------------//
@@ -116,15 +115,15 @@ module.exports = {
 		console.error("DEBUG application url:", applicationEnv.application_uris[0] || "nothing");
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
-		                 authorizationURL : authorization_url,
-		                 tokenURL : token_url,
-		                 clientID : client_id,
-		                 scope: 'openid',
-		                 response_type: 'code',
-		                 clientSecret : client_secret,
-		                 callbackURL : callback_url,
-		                 skipUserProfile: true,
-		                 issuer: issuer_id}, 
+            authorizationURL : authorization_url,
+            tokenURL : token_url,
+            clientID : client_id,
+            scope: 'openid',
+            response_type: 'code',
+            clientSecret : client_secret,
+            callbackURL : callback_url,
+            skipUserProfile: true,
+            issuer: issuer_id}, 
 			function(accessToken, refreshToken, profile, done) {
 				console.error("DEBUG before nexttick()");
 	         	process.nextTick(function() {
@@ -149,8 +148,9 @@ module.exports = {
 							console.error("User not saved, possibly in DB");
 						}
 					});
-	         	})
-		}); 
+		        });
+	        }
+		);
 
 		passport.use(Strategy); 
 		          
@@ -165,21 +165,14 @@ module.exports = {
 		}
 	},
 
-	googleUser: function(req, res, next){
-		console.log("googleUser:", req.session);
-		var users = {};
-		res.redirect("/");
-   		var user = req.session.passport.user;
-        user.expiresIn = user.expires_in;
-		var userDetails = users[userName] || (users[userName] = addUser('google', user));
-		var data = {
-				userID: 'google' +"- " + userDetails['google'].userName
-		};
-				var newUser = new UserModel();
-		newUser.store(data, function (err) {
-				if (!err) console.log("saved new user to DB");
-				else console.log("Could not Save user, possibly exist in DB");
-		});
-		return req.user;
+	isLoggedIn: function(session_data){
+		console.error("DEBUG isLoggedIn:", session_data);
+		console.trace("TRACE session data");
+		if (session_data.auth) {
+			return session_data.auth;
+		} else if (session_data.passport && session_data.passport.user) {
+			return session_data.passport;
+		}
+		return false;
 	}
 }

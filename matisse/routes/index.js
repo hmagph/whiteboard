@@ -2,6 +2,7 @@ var BoardModel = require(__dirname + '/../models/BoardModel.js');
 var ShapesModel = require(__dirname + '/../models/ShapesModel.js');
 var UserModel = require(__dirname + '/../models/UserModel.js');
 var events = require('events');
+var login = require(__dirname + '/../server/login.js');
 
 var renderLogin = function(res) {
     res.render('index', { title:'Matisse'});
@@ -22,8 +23,8 @@ var renderDashboard = function(res, ownedBoards, sharedBoards) {
     actualValues['sharedBoards'] = (sharedBoards)? sharedBoards: defaults.sharedBoards;
     actualValues['createdNum'] = actualValues['ownedBoards'].length;
     actualValues['sharedNum'] = actualValues['sharedBoards'].length;
-    actualValues['passport'] = (res.req.session.passport.user) ? res.req.session.passport : defaults.passport;
-    //console.error("DEBUG res", res);
+    actualValues['passport'] = login.isLoggedIn(res.req.session) || defaults.passport;
+    console.error("DEBUG renderDashboard actualValues:", actualValues);
     res.render('index', actualValues);
 };
 
@@ -133,7 +134,7 @@ var MatisseServer = new function() {
     });
 
     server.render = function(req, res) {        
-        var session_data = req.session.auth || req.session.passport;
+        var session_data = login.isLoggedIn(req.session);
         if (session_data) {
             server.emit('valid session', req, res, session_data);
             if (req.session)
@@ -169,7 +170,7 @@ exports.boards = {
 	    var chars = "0123456789abcdefghiklmnopqrstuvwxyz";
         var string_length = 8;
         randomstring = '';
-		var session_data = req.session.auth || req.session.passport;
+		var session_data = login.isLoggedIn(req.session);
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		var userName = userObj.getUserFromSession(session_data).name;
@@ -208,7 +209,7 @@ exports.boards = {
 	
 	remove:function (req, res, next) {
 		var boardUrl = req.body.boardUrl;
-		var session_data = req.session.auth || req.session.passport;
+		var session_data = login.isLoggedIn(req.session);
 		var userObj = new UserModel();
 		var userID = userObj.getUserID(session_data);
 		// remove shapes from the board
@@ -329,11 +330,14 @@ exports.api = {
 };
 
 exports.userinfo = function (req, res) {
-    var status = req.session.auth ? 200 : 403;
-    var userinfo = req.session.auth
-        ? JSON.stringify(new UserModel().getUserFromSession(req.session.auth))
-        : "{}";
-
+    var status = login.isLoggedIn(req.session) ? 200 : 403;
+    var userinfo = "{}";
+    if (req.session.auth) {
+        userinfo = JSON.stringify(new UserModel().getUserFromSession(req.session.auth));
+    } else if (req.session.passport.user) {
+        userinfo = JSON.stringify(new UserModel().getUserFromSession(req.session.passport));
+    }
+    
     res.writeHead(status, {"Content-Type": "application/json"});
     res.write(userinfo);
     res.end();
