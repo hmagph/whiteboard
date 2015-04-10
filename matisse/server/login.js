@@ -109,8 +109,8 @@ module.exports = {
 		var authorization_url = ssoConfig.credentials.authorizationEndpointUrl;
 		var token_url = ssoConfig.credentials.tokenEndpointUrl;
 		var issuer_id = ssoConfig.credentials.issuerIdentifier;
-		var host = process.env.VCAP_APP_HOST || applicationEnv.application_uris[0] || 'matisse.org';
-		var port = process.env.VCAP_APP_PORT || 8000;
+		var host = applicationEnv.application_uris[0] || 'matisse.org';
+		var port = 8000;
 		var callback_url = applicationEnv.application_uris[0] ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
 		console.error("DEBUG callback url:", callback_url);
 		console.error("DEBUG application url:", applicationEnv.application_uris[0] || "nothing");
