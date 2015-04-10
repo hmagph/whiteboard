@@ -108,11 +108,11 @@ module.exports = {
 		var authorization_url = ssoConfig.credentials.authorizationEndpointUrl;
 		var token_url = ssoConfig.credentials.tokenEndpointUrl;
 		var issuer_id = ssoConfig.credentials.issuerIdentifier;
-		var host = process.env.VCAP_APP_HOST || process.env.ROUTE_HOSTNAME || 'matisse.org';
+		var host = process.env.VCAP_APP_HOST || process.env.CONTAINER_HOSTNAME || 'matisse.org';
 		var port = process.env.VCAP_APP_PORT || 8000;
-		var callback_url = process.env.ROUTE_HOSTNAME ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
+		var callback_url = process.env.CONTAINER_HOSTNAME ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
 		console.error("DEBUG callback url:", callback_url);
-		console.log("callback url:", callback_url);
+		console.error("DEBUG process.env.CONTAINER_HOSTNAME:", process.env.CONTAINER_HOSTNAME);
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
 		                 authorizationURL : authorization_url,
