@@ -101,6 +101,7 @@ module.exports = {
 		// this application. For details of its content, please refer to
 		// the document or sample of each service.  
 		var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
+		console.error("DEBUG: container hostname obj:", process.env.CONTAINER_HOSTNAME);
 		var applicationEnv = process.env.VCAP_APPLICATION ? JSON.parse(process.env.VCAP_APPLICATION) : JSON.parse(process.env.CONTAINER_HOSTNAME);
 		var ssoConfig = services.SingleSignOn[0]; 
 		var client_id = ssoConfig.credentials.clientId;
