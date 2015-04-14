@@ -101,19 +101,19 @@ module.exports = {
 		// this application. For details of its content, please refer to
 		// the document or sample of each service.  
 		var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
-		console.error("DEBUG: container hostname obj:", process.env.CONTAINER_HOSTNAME);
-		var applicationEnv = process.env.VCAP_APPLICATION ? JSON.parse(process.env.VCAP_APPLICATION) : process.env.CONTAINER_HOSTNAME;
+		console.error("DEBUG: VCAP_APPLICATION:", process.env.VCAP_APPLICATION);
+		var applicationEnv = process.env.VCAP_APPLICATION ? JSON.parse(process.env.VCAP_APPLICATION) : "{}";
+		console.error("DEBUG: application env:", applicationEnv);
 		var ssoConfig = services.SingleSignOn[0]; 
 		var client_id = ssoConfig.credentials.clientId;
 		var client_secret = ssoConfig.credentials.secret;
 		var authorization_url = ssoConfig.credentials.authorizationEndpointUrl;
 		var token_url = ssoConfig.credentials.tokenEndpointUrl;
 		var issuer_id = ssoConfig.credentials.issuerIdentifier;
-		var host = applicationEnv.application_uris[0] || 'matisse.org';
+		var host = applicationEnv !== "{}" ? applicationEnv.application_uris[0] : process.env.CONTAINER_HOSTNAME ? process.env.CONTAINER_HOSTNAME : 'matisse.org';
 		var port = 8000;
-		var callback_url = applicationEnv.application_uris[0] ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
+		var callback_url = applicationEnv !== "{}" || process.env.CONTAINER_HOSTNAME ? "http://" + host + "/auth/sso/callback" : "http://" + host + ":" + port + "/auth/sso/callback";//"http://whiteboardcontainer.mybluemix.net/auth/sso/callback";
 		console.error("DEBUG callback url:", callback_url);
-		console.error("DEBUG application url:", applicationEnv.application_uris[0] || "nothing");
 		var OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 		var Strategy = new OpenIDConnectStrategy({
             authorizationURL : authorization_url,
@@ -124,7 +124,7 @@ module.exports = {
             clientSecret : client_secret,
             callbackURL : callback_url,
             skipUserProfile: true,
-            issuer: issuer_id}, 
+            issuer: issuer_id},
 			function(accessToken, refreshToken, profile, done) {
 				console.error("DEBUG before nexttick()");
 	         	process.nextTick(function() {
