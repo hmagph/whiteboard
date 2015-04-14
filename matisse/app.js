@@ -16,7 +16,7 @@ application = (function () {
     var gzippo = require('gzippo');
 
     /**BLUEMIX STUFF**/
-	var host = process.env.VCAP_APP_HOST || JSON.parse(process.env.ROUTE_HOSTNAME) || 'matisse.org';
+	var host = process.env.VCAP_APP_HOST || 'matisse.org';
 	var port = process.env.VCAP_APP_PORT || 8000;
     console.error("DEBUG host & port for app:", host, port);
   	/*var redisHost = process.env.REDIS_HOST || "localhost";
