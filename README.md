@@ -67,7 +67,11 @@ Jobs - Here we leave the defaults and simply set our organization and space. Thi
 
 Deploy Container
 Input - The build stage's files, our image.
-Jobs - Deploy leaves the default red/black deploy strategy which keeps the currently running container (if there is one) if the deployment fails. Here we have to set the port that the application runs on (the port is not entered in the URL when the container is live like we do when running in the dev environment). We chose to use container groups so in the deploy script we had to comment the default single container deployment and uncomment the container group deployment:
+Jobs - Deploy uses the default 'red/black deploy' strategy which keeps the currently running container running (if there is one) if the deployment fails. Here we have to set the port that the application runs on (the port is not entered in the URL when the container is live, like we do when running in the dev environment). 
+
+The deployscript used right now is a fork of the standard deploy script. https://github.com/estesp/deployscripts is used because of it's added 'INJECT_' feature. This allows us to create environment variables that can be used within the whiteboard app. The functionality is planned for the standard deploy script at some point. The current script is located here: https://github.com/Osthanes/deployscripts.git.
+
+We chose to use container groups so in the deploy script we had to comment the default single container deployment and uncomment the container group deployment:
 
 # Deploy Container Group (optionally define ROUTE_HOSTNAME, ROUTE_DOMAIN, BIND_TO, DESIRED on the environment)
 # IF YOU WANT CONTAINER GROUPS .. uncomment the next line, and comment out the previous deployment line (/bin/bash deployscripts/deploygroup.sh)
