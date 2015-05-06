@@ -73,11 +73,13 @@ The deployscript used right now is a fork of the standard deploy script. https:/
 
 We chose to use container groups so in the deploy script we had to comment the default single container deployment and uncomment the container group deployment:
 
-# Deploy Container Group (optionally define ROUTE_HOSTNAME, ROUTE_DOMAIN, BIND_TO, DESIRED on the environment)
-# IF YOU WANT CONTAINER GROUPS .. uncomment the next line, and comment out the previous deployment line (/bin/bash deployscripts/deploygroup.sh)
+\# Deploy Container Group (optionally define ROUTE_HOSTNAME, ROUTE_DOMAIN, BIND_TO, DESIRED on the environment)
+
+\# IF YOU WANT CONTAINER GROUPS .. uncomment the next line, and comment out the previous deployment line (/bin/bash deployscripts/deploygroup.sh)
 export BIND_TO=Whiteboard-Container
 export ROUTE_HOSTNAME=containerwhiteboard
-# Need to use the INJECT_ prefix to have the env vars passed into the container for the app use
+
+\# Need to use the INJECT_ prefix to have the env vars passed into the container for the app use
 export INJECT_CONTAINER_HOSTNAME=${CONTAINER_HOSTNAME}
 /bin/bash deployscripts/deploygroup.sh 
 
