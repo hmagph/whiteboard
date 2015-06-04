@@ -1,3 +1,7 @@
+Press this button, to get your own copy of the matisse whiteboard running in Bluemix !
+
+[![Deploy To Bluemix](https://bluemix.net/deploy/button.png)](http://bluemix.net/deploy)
+
 The matisse whiteboard by Imaginea is a cooperative drawing application where whiteboards can be shared and are saved to a database. Users log in using their Google+ or Twitter accounts. Google authentication is done through the Bluemix SSO service.
 
 The whiteboard can be found in the matisse directory. It is a fork of https://github.com/Imaginea/matisse with some additional updates including the use of Bluemix SSO. 
