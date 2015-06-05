@@ -9,12 +9,12 @@ stages:
     triggers:
       -
         type: commit
-        enabled: false
     jobs:
       -
+        name: Build-Container
         type: builder
-        name: Build Container
-        extensionId: 1079f55ce434b4f6c87e72c79a184e01
+        extensionId: ibm.devops.services.pipeline.container.builder
+        #extensionId: 1079f55ce434b4f6c87e72c79a184e01
         target:
           url: ${CF_TARGET_URL}
           organization_guid: ${CF_ORGANIZATION_ID}
@@ -83,15 +83,16 @@ stages:
       -
         type: job
         stage: Build
-        job: build job
+        job: Build-Container
     triggers:
       -
         type: stage
     jobs:
       -
         type: deployer
-        name: Deploy Container
-        extensionId: 1079f55ce434b4f6c87e72c79a0fb94d
+        name: Deploy-Container
+        extensionId: ibm.devops.services.pipeline.docker.deploy.ice
+        #extensionId: 1079f55ce434b4f6c87e72c79a0fb94d
         target:
           url: ${CF_TARGET_URL}
           organization_guid: ${CF_ORGANIZATION_ID}
